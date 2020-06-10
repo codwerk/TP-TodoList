@@ -1,4 +1,5 @@
-# tp-todolist
+# TP TodoList
+>Pratique : création d'une TodoList avec le framework front-end Vue JS
 
 ## Project setup
 ```
