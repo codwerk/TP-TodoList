@@ -8,16 +8,23 @@
          <input type="text" class="new-todo" placeholder="Ajoute une tâche" v-model="newTodo" @keyup.enter="addTodo">
        </header>
        <div class="todoapp__body">
+
+         <div class="wrapper__option">
+          <input type="checkbox" v-model="allDone">
+          <label> Tous sélectionner </label>
+         </div>
+
          <ul class="todo-list">
            <li class="todo" v-for="(todo, index) in filtered" :key="index">
              <div class="view">
                <input type="checkbox" v-model="todo.completed">
                <label  :class="{completed: todo.completed}">{{ todo.name }}</label>
+               <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
              </div>
            </li>
          </ul>
        </div>
-       <footer class="todoapp__ftr">
+       <footer class="todoapp__ftr" v-if="todos.length > 0">
          <span class="todo-count"> {{ remaining }} {{ remaining > 1 ? 'tâches' : 'tâche'}}  a réalisée</span>
          <ul class="todoapp__ftr-list">
            <li><a href="#" :class="{selected: filter === 'all'}"  @click.prevent="filter = 'all'">Toutes</a></li>
@@ -49,10 +56,24 @@ export default {
       })
       
       this.newTodo = ''
+    },
+    deleteTodo(todo) {
+      this.todos = this.todos.filter(i => i !== todo)
     }
   },
   computed: {
-   remaining () {
+    allDone: {
+      get (){
+        return false;
+      },
+      set (value) {
+        console.log('value', value);
+          this.todos.forEach( todo => {
+            todo.completed = value
+          })
+      }
+    },
+    remaining () {
      return this.todos.filter( todo => !todo.completed).length
     },
     filtered () {
@@ -104,6 +125,11 @@ export default {
 
     .todoapp__body {
       margin: 0 20px;
+
+      .wrapper__option {
+        text-align: center;
+        margin: 20px 0px;
+      }
       .todo-list {
         margin: 20px 0;
 
@@ -121,6 +147,22 @@ export default {
 
             label {
               text-transform: capitalize;
+            }
+
+            .destroy {
+              position: relative;
+              border: none;
+              cursor: pointer;
+              background: transparent;
+              &::after {
+                content: '-';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 30px;
+                font-weight: 100;
+              }
             }
           }
         }
