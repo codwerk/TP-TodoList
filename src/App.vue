@@ -25,12 +25,17 @@
          </ul>
        </div>
        <footer class="todoapp__ftr" v-if="todos.length > 0">
-         <span class="todo-count"> {{ remaining }} {{ remaining > 1 ? 'tâches' : 'tâche'}}  a réalisée</span>
+         <div class="wrapper-ftr__option">
+          <span class="todo-count"> {{ remaining }} {{ remaining > 1 ? 'tâches' : 'tâche'}}  a réalisée</span>
+          <button v-show="completed" @click.prevent="deleteCompleted">Supprimer tâche réalisée</button>
+         </div>
+         
          <ul class="todoapp__ftr-list">
            <li><a href="#" :class="{selected: filter === 'all'}"  @click.prevent="filter = 'all'">Toutes</a></li>
            <li><a href="#" :class="{selected: filter === 'todo'}"  @click.prevent="filter = 'todo'">A faire</a></li>
            <li><a href="#" :class="{selected: filter === 'done'}"  @click.prevent="filter = 'done'">Faites</a></li>
          </ul>
+         
        </footer>
      </section>
   </div>
@@ -59,6 +64,9 @@ export default {
     },
     deleteTodo(todo) {
       this.todos = this.todos.filter(i => i !== todo)
+    },
+    deleteCompleted () {
+     this.todos = this.todos.filter( todo => !todo.completed)
     }
   },
   computed: {
@@ -75,6 +83,9 @@ export default {
     },
     remaining () {
      return this.todos.filter( todo => !todo.completed).length
+    },
+    completed () {
+     return this.todos.filter( todo => todo.completed).length
     },
     filtered () {
       if(this.filter === 'todo'){
@@ -120,6 +131,7 @@ export default {
         border: none;
         border-bottom: 1px solid #2c3e50;
         padding: 10px;
+        outline: none;
       }
     }
 
@@ -143,6 +155,7 @@ export default {
 
             input[type="checkbox"] {
               cursor: pointer;
+              
             }
 
             label {
@@ -173,6 +186,11 @@ export default {
       margin: 20px 0;
       max-width: 50%;
       margin: 0 auto;
+
+      .wrapper-ftr__option {
+        display: flex;
+        justify-content: space-between;
+      }
 
       .todoapp__ftr-list {
         
